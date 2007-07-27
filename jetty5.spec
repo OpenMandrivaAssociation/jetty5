@@ -91,7 +91,7 @@ BuildRequires:  jakarta-commons-logging
 BuildRequires:  jsse
 BuildRequires:  mx4j >= 0:3.0
 BuildRequires:  tomcat5-jasper
-BuildRequires:  tomcat5-jsp
+BuildRequires:  jsp
 BuildRequires:  tomcat5-servlet-2.4-api
 BuildRequires:  xerces-j2 >= 0:2.7
 BuildRequires:  xml-commons-apis
