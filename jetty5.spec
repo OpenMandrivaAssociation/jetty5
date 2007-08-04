@@ -56,7 +56,7 @@
 
 Name:           jetty5
 Version:        5.1.12
-Release:        %mkrel 1.0.1
+Release:        %mkrel 1.0.3
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
@@ -66,10 +66,10 @@ URL:            http://jetty.mortbay.org/jetty/
 Source0:        %{jettyname}-%{version}.zip
 Source1:        jetty5.script
 Source2:        jetty5.init
-Patch0:                jetty5-extra-j2ee-build_xml.patch
-Patch1:                jetty5-extra-jdk1.2-build_xml.patch
-Patch2:                jetty5-PostFileFilter.patch
-
+Source3:        jetty5-MANIFEST.MF
+Patch0:         jetty5-extra-j2ee-build_xml.patch
+Patch1:         jetty5-extra-jdk1.2-build_xml.patch
+Patch2:         jetty5-PostFileFilter.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if ! %{gcj_support}
@@ -313,6 +313,13 @@ log4j \
 %else
 %{ant} -Dxdoclet.home=%{_javadir}/xdoclet -Dbuild.sysclasspath=first %{all}
 %endif
+
+# inject the OSGi Manifest
+pushd lib
+mkdir META-INF
+cp -a %{SOURCE3} META-INF/MANIFEST.MF
+zip org.mortbay.jetty.jar META-INF/MANIFEST.MF
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
