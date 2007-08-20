@@ -121,7 +121,7 @@ BuildRequires:  openorb-ots
 BuildRequires:  xapool
 %endif
 #
-Requires:  /sbin/chkconfig
+Requires:  chkconfig
 Requires:  jpackage-utils >= 0:1.6
 Requires:  ant >= 0:1.6
 Requires:  jakarta-commons-el
