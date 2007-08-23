@@ -56,7 +56,7 @@
 
 Name:           jetty5
 Version:        5.1.12
-Release:        %mkrel 1.0.3
+Release:        %mkrel 1.0.4
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
