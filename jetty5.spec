@@ -56,7 +56,7 @@
 
 Name:           jetty5
 Version:        5.1.12
-Release:        %mkrel 1.0.4
+Release:        %mkrel 1.0.5
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
@@ -134,8 +134,6 @@ Requires:  xerces-j2 >= 0:2.7
 Requires:  xml-commons-apis
 %if %{gcj_support}
 BuildRequires:    java-gcj-compat-devel
-Requires(post):   java-gcj-compat
-Requires(postun): java-gcj-compat
 %endif
 Requires(pre):  rpm-helper
 Requires(post):  rpm-helper
