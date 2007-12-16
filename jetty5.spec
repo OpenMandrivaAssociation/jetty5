@@ -56,7 +56,7 @@
 
 Name:           jetty5
 Version:        5.1.12
-Release:        %mkrel 1.0.5
+Release:        %mkrel 1.0.6
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
@@ -76,7 +76,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 %endif
 
-BuildRequires:  jpackage-utils >= 0:1.6
+BuildRequires:  java-rpmbuild >= 0:1.6
 #BuildRequires:  perl >= 0:5.005
 # build only
 BuildRequires:  ant-junit
