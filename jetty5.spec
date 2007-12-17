@@ -70,7 +70,6 @@ Source3:        jetty5-MANIFEST.MF
 Patch0:         jetty5-extra-j2ee-build_xml.patch
 Patch1:         jetty5-extra-jdk1.2-build_xml.patch
 Patch2:         jetty5-PostFileFilter.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if ! %{gcj_support}
 BuildArch:      noarch
