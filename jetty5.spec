@@ -28,48 +28,58 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define _with_gcj_support 1
-%define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
-%define bootstrap %{?_with_bootstrap:1}%{!?_with_bootstrap:%{?_without_bootstrap:0}%{!?_without_bootstrap:%{?_bootstrap:%{_bootstrap}}%{!?_bootstrap:0}}}
+%bcond_without fedora
+
+%define gcj_support 0
+%define bootstrap 0
 
 # If you don't want the -extras subpackage to be built
 # in order to avoid its (Build)Requires
 # give rpmbuild option '--without extra'
 
-%define _without_extra 1
-%define without_extra %{?_without_extra:1}%{!?_without_extra:0}
-%define with_extra %{!?_without_extra:1}%{?_without_extra:0}
-
-%define _localstatedir %{_var}
+%define with_extra 0
 
 %define section     free
 %define jettyname   jetty
 %define jtuid       110
-%define confdir            %{_sysconfdir}/%{name}
-%define logdir            %{_logdir}/%{name}
-%define homedir            %{_datadir}/%{name}
-%define tempdir            %{_localstatedir}/cache/%{name}/temp
-%define rundir            %{_localstatedir}/run/%{name}
-%define libdir            %{_localstatedir}/lib/%{name}/lib
-%define appdir            %{_localstatedir}/lib/%{name}/webapps
-%define demodir            %{_localstatedir}/lib/%{name}/demo
+%define username    %{name}
+%define confdir     %{_sysconfdir}/%{name}
+%define logdir      %{_logdir}/%{name}
+%define homedir     %{_datadir}/%{name}
+%define tempdir     %{_localstatedir}/cache/%{name}/temp
+%define rundir      %{_localstatedir}/run/%{name}
+%define libdir      %{_localstatedir}/lib/%{name}/lib
+%define appdir      %{_localstatedir}/lib/%{name}/webapps
+%define demodir     %{_localstatedir}/lib/%{name}/demo
 
 Name:           jetty5
-Version:        5.1.12
-Release:        %mkrel 1.0.7
+Version:        5.1.14
+Release:        %mkrel 1.2.1
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
 Group:          Development/Java
 License:        Apache License
 URL:            http://jetty.mortbay.org/jetty/
-Source0:        %{jettyname}-%{version}.zip
+# Following source tarball was originally taken from the following location:
+# http://www.ibiblio.org/maven/jetty/jetty-5.1.x/jetty-5.1.14.tgz
+# The tarball was modified by removing all jars and BCLA licenses.
+# tar -xzf jetty-5.1.14.tgz
+# pushd jetty-5.1.14
+# find . -name *.jar -exec rm {} \;
+# rm ./etc/LICENSE.javax.xml.html ./etc/LICENSE.jsse.txt
+# popd
+# tar -czf jetty-5.1.14.fedora.tgz jetty-5.1.14/*
+Source0:        %{jettyname}-%{version}.fedora.tgz
 Source1:        jetty5.script
 Source2:        jetty5.init
-Source3:        jetty5-MANIFEST.MF
-Patch0:         jetty5-extra-j2ee-build_xml.patch
-Patch1:         jetty5-extra-jdk1.2-build_xml.patch
-Patch2:         jetty5-PostFileFilter.patch
+Source3:        jetty.logrotate
+Source4:        jetty-OSGi-MANIFEST.MF
+Patch0:         jetty-extra-j2ee-build_xml.patch
+Patch1:         jetty-PostFileFilter.patch
+Patch2:         jetty-libgcj-bad-serialization.patch
+Patch3:         jetty-TestRFC2616-libgcj-bad-date-parser.patch
+Patch4:		jetty-CERT438616-CERT237888-CERT21284.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if ! %{gcj_support}
@@ -132,6 +142,7 @@ Requires:  mx4j >= 0:3.0
 Requires:  tomcat5-servlet-2.4-api
 Requires:  xerces-j2 >= 0:2.7
 Requires:  xml-commons-apis
+
 %if %{gcj_support}
 BuildRequires:    java-gcj-compat-devel
 %endif
@@ -156,8 +167,6 @@ platforms.
 %package        javadoc
 Summary:        Javadoc for %{name}
 Group:          Development/Java
-Requires(post):   /bin/rm,/bin/ln
-Requires(postun): /bin/rm
 
 %description    javadoc
 %{summary}.
@@ -230,9 +239,17 @@ Requires:       %{name} = 0:%{version}
 
 %prep
 %setup -q -n %{jettyname}-%{version}
+mv demo/webapps/servlets-examples.war \
+  demo/webapps/servlets-examples-dontdelete
+mv demo/webapps/jsp-examples.war \
+  demo/webapps/jsp-examples-dontdelete
 for f in $(find . -name "*.?ar"); do rm $f; done
 find . -name "*.class" -exec rm {} \;
-rm src/org/mortbay/http/SunJsseListener.java
+# .war files needed for tests
+mv demo/webapps/servlets-examples-dontdelete \
+  demo/webapps/servlets-examples.war
+mv demo/webapps/jsp-examples-dontdelete \
+  demo/webapps/jsp-examples.war
 
 %if %{bootstrap}
 rm src/org/mortbay/util/jmx/MX4JHttpAdaptor.java
@@ -241,8 +258,14 @@ rm src/org/mortbay/util/jmx/MX4JHttpAdaptor.java
 %patch0 -b .sav
 %patch1 -b .sav
 %patch2 -b .sav
+%patch3 -b .sav
 
-%{__perl} -pi -e 's/<javac(\s+|$)/<javac nowarn="true"\1/g' `%{_bindir}/find . -type f -name build.xml`
+%patch4
+
+# Delete this Sun specific file.
+#rm src/org/mortbay/http/SunJsseListener.java
+
+#%{__perl} -pi -e 's/<javac(\s+|$)/<javac nowarn="true"\1/g' `%{_bindir}/find . -type f -name build.xml`
 
 %{_bindir}/find . -name '*.txt' -print0 | %{_bindir}/xargs -0 -t %{__chmod} 0644
 %{_bindir}/find . -name '*.sh' -print | %{_bindir}/xargs -t %{__chmod} 0755
@@ -304,20 +327,16 @@ log4j \
 )
 %endif
 
-%define all prepare jars webapps javadoc
-
 %if %{with_extra}
-%{ant} -Dxdoclet.home=%{_javadir}/xdoclet -Dbuild.sysclasspath=first %{all} extra
+%{ant} -Dxdoclet.home=%{_javadir}/xdoclet -Dbuild.sysclasspath=first all extra
 %else
-%{ant} -Dxdoclet.home=%{_javadir}/xdoclet -Dbuild.sysclasspath=first %{all}
+%{ant} -Dxdoclet.home=%{_javadir}/xdoclet -Dbuild.sysclasspath=first all
 %endif
 
-# inject the OSGi Manifest
-pushd lib
-mkdir META-INF
-cp -a %{SOURCE3} META-INF/MANIFEST.MF
-zip org.mortbay.jetty.jar META-INF/MANIFEST.MF
-popd
+# inject OSGi manifests
+mkdir -p META-INF
+cp %{SOURCE4} META-INF/MANIFEST.MF
+zip -u lib/org.mortbay.jetty.jar META-INF/MANIFEST.MF
 
 %install
 rm -rf $RPM_BUILD_ROOT
