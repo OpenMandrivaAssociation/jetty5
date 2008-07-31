@@ -54,7 +54,7 @@
 
 Name:           jetty5
 Version:        5.1.14
-Release:        %mkrel 1.2.1
+Release:        %mkrel 1.5.1
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
@@ -263,14 +263,12 @@ rm src/org/mortbay/util/jmx/MX4JHttpAdaptor.java
 %patch4
 
 # Delete this Sun specific file.
-#rm src/org/mortbay/http/SunJsseListener.java
+rm src/org/mortbay/http/SunJsseListener.java
 
-#%{__perl} -pi -e 's/<javac(\s+|$)/<javac nowarn="true"\1/g' `%{_bindir}/find . -type f -name build.xml`
-
-%{_bindir}/find . -name '*.txt' -print0 | %{_bindir}/xargs -0 -t %{__chmod} 0644
-%{_bindir}/find . -name '*.sh' -print | %{_bindir}/xargs -t %{__chmod} 0755
-%{_bindir}/find . -name '*.MF' -o -name '*.html' -o -name '*.jsp' | \
-  %{_bindir}/xargs -t %{__perl} -pi -e 's/\r//g'
+# Convert line endings...
+%{__sed} -i 's/\r//' demo/webapps/jetty/auth/logon.html
+%{__sed} -i 's/\r//' demo/webapps/jetty/auth/logon.jsp
+%{__sed} -i 's/\r//' demo/webapps/jetty/auth/logonError.html
 
 %build
 
