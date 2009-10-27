@@ -53,8 +53,8 @@
 %define demodir     %{_localstatedir}/lib/%{name}/demo
 
 Name:           jetty5
-Version:        5.1.14
-Release:        %mkrel 1.5.4
+Version:        5.1.15
+Release:        %mkrel 1.5.0
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
@@ -79,7 +79,8 @@ Patch0:         jetty-extra-j2ee-build_xml.patch
 Patch1:         jetty-PostFileFilter.patch
 Patch2:         jetty-libgcj-bad-serialization.patch
 Patch3:         jetty-TestRFC2616-libgcj-bad-date-parser.patch
-Patch4:		jetty-CERT438616-CERT237888-CERT21284.patch
+Patch4:		jetty-webdefault.patch
+Patch5:		jetty-unix.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %if ! %{gcj_support}
@@ -260,8 +261,8 @@ rm src/org/mortbay/util/jmx/MX4JHttpAdaptor.java
 %patch1 -b .sav
 %patch2 -b .sav
 %patch3 -b .sav
-
 %patch4
+%patch5
 
 # Delete this Sun specific file.
 rm src/org/mortbay/http/SunJsseListener.java
