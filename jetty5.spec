@@ -106,6 +106,7 @@ BuildRequires:  tomcat5-servlet-2.4-api
 BuildRequires:  xerces-j2 >= 0:2.7
 BuildRequires:  xml-commons-apis
 BuildRequires:  zip
+BuildRequires:  tomcat5-webapps
 # extra
 %if %{with_extra}
 BuildRequires:  carol
