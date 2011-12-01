@@ -339,42 +339,42 @@ cp %{SOURCE4} META-INF/MANIFEST.MF
 zip -u lib/org.mortbay.jetty.jar META-INF/MANIFEST.MF
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 # dirs
-install -dm 755 $RPM_BUILD_ROOT%{_bindir}
-install -dm 755 $RPM_BUILD_ROOT%{_initrddir}
-install -dm 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
-install -dm 755 $RPM_BUILD_ROOT%{confdir}
-install -dm 755 $RPM_BUILD_ROOT%{confdir}/extra
-install -dm 755 $RPM_BUILD_ROOT%{demodir}
-install -dm 755 $RPM_BUILD_ROOT%{homedir}
-install -dm 755 $RPM_BUILD_ROOT%{homedir}/bin
-install -dm 755 $RPM_BUILD_ROOT%{homedir}/ext
-install -dm 755 $RPM_BUILD_ROOT%{homedir}/extra
-install -dm 755 $RPM_BUILD_ROOT%{homedir}/extra/ext
-install -dm 755 $RPM_BUILD_ROOT%{libdir}
-install -dm 755 $RPM_BUILD_ROOT%{libdir}/extra
-install -dm 755 $RPM_BUILD_ROOT%{logdir}
-install -dm 755 $RPM_BUILD_ROOT%{rundir}
-install -dm 755 $RPM_BUILD_ROOT%{tempdir}
-install -dm 755 $RPM_BUILD_ROOT%{appdir}
+install -dm 755 %{buildroot}%{_bindir}
+install -dm 755 %{buildroot}%{_initrddir}
+install -dm 755 %{buildroot}%{_javadir}/%{name}
+install -dm 755 %{buildroot}%{confdir}
+install -dm 755 %{buildroot}%{confdir}/extra
+install -dm 755 %{buildroot}%{demodir}
+install -dm 755 %{buildroot}%{homedir}
+install -dm 755 %{buildroot}%{homedir}/bin
+install -dm 755 %{buildroot}%{homedir}/ext
+install -dm 755 %{buildroot}%{homedir}/extra
+install -dm 755 %{buildroot}%{homedir}/extra/ext
+install -dm 755 %{buildroot}%{libdir}
+install -dm 755 %{buildroot}%{libdir}/extra
+install -dm 755 %{buildroot}%{logdir}
+install -dm 755 %{buildroot}%{rundir}
+install -dm 755 %{buildroot}%{tempdir}
+install -dm 755 %{buildroot}%{appdir}
 # main pkg
-install -pm 755 extra/unix/bin/jetty.sh $RPM_BUILD_ROOT%{_bindir}/d%{name}
-install -pm 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{name}
-install -pm 755 %{SOURCE2} $RPM_BUILD_ROOT%{_initrddir}/%{name}
-install -pm 644 start.jar $RPM_BUILD_ROOT%{homedir}/bin
-install -pm 644 stop.jar $RPM_BUILD_ROOT%{homedir}/bin
-cp -pr etc/* $RPM_BUILD_ROOT%{confdir}
-touch $RPM_BUILD_ROOT%{confdir}/jetty.conf
-install -pm 644 lib/org.mortbay.jetty.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-%{version}.jar
-install -pm 644 lib/org.mortbay.jmx.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jmx-%{version}.jar
-install -pm 644 lib/javax.servlet.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-servlet-%{version}.jar
-(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
-pushd $RPM_BUILD_ROOT%{libdir}
+install -pm 755 extra/unix/bin/jetty.sh %{buildroot}%{_bindir}/d%{name}
+install -pm 755 %{SOURCE1} %{buildroot}%{_bindir}/%{name}
+install -pm 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
+install -pm 644 start.jar %{buildroot}%{homedir}/bin
+install -pm 644 stop.jar %{buildroot}%{homedir}/bin
+cp -pr etc/* %{buildroot}%{confdir}
+touch %{buildroot}%{confdir}/jetty.conf
+install -pm 644 lib/org.mortbay.jetty.jar %{buildroot}%{_javadir}/%{name}/%{name}-%{version}.jar
+install -pm 644 lib/org.mortbay.jmx.jar %{buildroot}%{_javadir}/%{name}/%{name}-jmx-%{version}.jar
+install -pm 644 lib/javax.servlet.jar %{buildroot}%{_javadir}/%{name}/%{name}-servlet-%{version}.jar
+(cd %{buildroot}%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
+pushd %{buildroot}%{libdir}
   ln -sf %{_javadir}/%{name}/%{name}.jar org.mortbay.jetty.jar
   ln -sf %{_javadir}/%{name}/%{name}-jmx.jar org.mortbay.jmx.jar
 popd
-pushd $RPM_BUILD_ROOT%{homedir}/ext
+pushd %{buildroot}%{homedir}/ext
 ln -s $(build-classpath ant)
 ln -s $(build-classpath jasper5-compiler)
 ln -s $(build-classpath jasper5-runtime)
@@ -396,28 +396,28 @@ JETTY_PORT=8080
 JETTY_RUN=%{_localstatedir}/run/%{name}
 JETTY_PID=\$JETTY_RUN/jetty5.pid
 EO_RC
-) > $RPM_BUILD_ROOT%{homedir}/.jettyrc
+) > %{buildroot}%{homedir}/.jettyrc
 
 # extra
 %if %{with_extra}
-cp -pr extra/etc/* $RPM_BUILD_ROOT%{confdir}/extra
-rm $RPM_BUILD_ROOT%{confdir}/extra/LICENSE.apache.txt
-rm $RPM_BUILD_ROOT%{confdir}/extra/LICENSE.hsqldb.html
-rm $RPM_BUILD_ROOT%{confdir}/extra/LICENSE.p6spy.html
+cp -pr extra/etc/* %{buildroot}%{confdir}/extra
+rm %{buildroot}%{confdir}/extra/LICENSE.apache.txt
+rm %{buildroot}%{confdir}/extra/LICENSE.hsqldb.html
+rm %{buildroot}%{confdir}/extra/LICENSE.p6spy.html
 
-install -pm 644 extra/lib/org.jboss.jetty.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jboss-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.ftp.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-ftp-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.j2ee.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-j2ee-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.jaas.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jaas-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.jsr77.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jsr77-%{version}.jar
+install -pm 644 extra/lib/org.jboss.jetty.jar %{buildroot}%{_javadir}/%{name}/%{name}-jboss-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.ftp.jar %{buildroot}%{_javadir}/%{name}/%{name}-ftp-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.j2ee.jar %{buildroot}%{_javadir}/%{name}/%{name}-j2ee-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.jaas.jar %{buildroot}%{_javadir}/%{name}/%{name}-jaas-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.jsr77.jar %{buildroot}%{_javadir}/%{name}/%{name}-jsr77-%{version}.jar
 # omit for 1.6
-# install -pm 644 extra/lib/org.mortbay.jetty-jdk1.2.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jetty-jdk1.2-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.jetty.plus.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-plus-%{version}.jar
+# install -pm 644 extra/lib/org.mortbay.jetty-jdk1.2.jar %{buildroot}%{_javadir}/%{name}/%{name}-jetty-jdk1.2-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.jetty.plus.jar %{buildroot}%{_javadir}/%{name}/%{name}-plus-%{version}.jar
 # omit for 1.6
-# install -pm 644 extra/lib/org.mortbay.jmx-jdk1.2.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jmx-jdk1.2-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.loadbalancer.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-loadbalancer-%{version}.jar
-(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
-pushd $RPM_BUILD_ROOT%{libdir}/extra
+# install -pm 644 extra/lib/org.mortbay.jmx-jdk1.2.jar %{buildroot}%{_javadir}/%{name}/%{name}-jmx-jdk1.2-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.loadbalancer.jar %{buildroot}%{_javadir}/%{name}/%{name}-loadbalancer-%{version}.jar
+(cd %{buildroot}%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
+pushd %{buildroot}%{libdir}/extra
   ln -sf %{_javadir}/%{name}/%{name}-jboss.jar org.jboss.jetty.jar
   ln -sf %{_javadir}/%{name}/%{name}-ftp.jar org.mortbay.ftp.jar
   ln -sf %{_javadir}/%{name}/%{name}-j2ee.jar org.mortbay.j2ee.jar
@@ -426,7 +426,7 @@ pushd $RPM_BUILD_ROOT%{libdir}/extra
   ln -sf %{_javadir}/%{name}/%{name}-plus.jar org.mortbay.jetty.plus.jar
   ln -sf %{_javadir}/%{name}/%{name}-loadbalancer.jar org.mortbay.loadbalancer.jar
 popd
-pushd $RPM_BUILD_ROOT%{homedir}/extra/ext
+pushd %{buildroot}%{homedir}/extra/ext
   #jonas_timer.jar
   #objectweb-datasource.jar
 ln -s $(build-classpath jaf)
@@ -445,24 +445,24 @@ popd
 %endif
 
 # demo
-cp -pr demo/* $RPM_BUILD_ROOT%{demodir}
+cp -pr demo/* %{buildroot}%{demodir}
 
 # javadoc
-cp -pr webapps/* $RPM_BUILD_ROOT%{appdir}
-install -dm 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-pushd $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-unzip -q $RPM_BUILD_ROOT%{appdir}/javadoc.war
+cp -pr webapps/* %{buildroot}%{appdir}
+install -dm 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
+pushd %{buildroot}%{_javadocdir}/%{name}-%{version}
+unzip -q %{buildroot}%{appdir}/javadoc.war
 popd
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+ln -s %{name}-%{version} %{buildroot}%{_javadocdir}/%{name}
 
 # manual
-install -dm 755 $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
-cp -p {LICENSE.TXT,VERSION.TXT} $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
-mv $RPM_BUILD_ROOT%{demodir}/webapps/jetty/* \
-                $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
-rm -rf $RPM_BUILD_ROOT%{appdir}/jetty
+install -dm 755 %{buildroot}%{_docdir}/%{name}-%{version}
+cp -p {LICENSE.TXT,VERSION.TXT} %{buildroot}%{_docdir}/%{name}-%{version}
+mv %{buildroot}%{demodir}/webapps/jetty/* \
+                %{buildroot}%{_docdir}/%{name}-%{version}
+rm -rf %{buildroot}%{appdir}/jetty
 
-pushd $RPM_BUILD_ROOT%{homedir}
+pushd %{buildroot}%{homedir}
    [ -d etc ]    || ln -fs %{confdir}   etc
    [ -d demo ]    || ln -fs %{demodir}   demo
    [ -d logs ]    || ln -fs %{logdir}    logs
@@ -478,7 +478,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 popd
 
 # no need to fix paths
-#perl -pi -e 's#etc/#conf/#g;' $RPM_BUILD_ROOT%{confdir}/*.xml
+#perl -pi -e 's#etc/#conf/#g;' %{buildroot}%{confdir}/*.xml
 
 (cd %{buildroot} && ln -s %{_javadocdir}/%{name} ./%{homedir}/javadoc)
 
@@ -495,7 +495,7 @@ popd
 %endif
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %pre
 # Add the "jetty5" user and group
