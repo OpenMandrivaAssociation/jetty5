@@ -1,0 +1,22 @@
+--- test/src/org/mortbay/jetty/TestServer.java~	2005-08-13 10:12:14.000000000 -0700
++++ test/src/org/mortbay/jetty/TestServer.java	2006-08-08 11:24:55.000000000 -0700
+@@ -96,19 +96,6 @@
+ 
+         
+         
+-        System.err.println("Serialize and deserialize server");
+-        
+-        ObjectInputStream oi = new ObjectInputStream(new FileInputStream(tmp));
+-        server = (Server)oi.readObject();
+-        oi.close();
+-        
+-
+-        System.err.println("start recovered server");
+-        server.start();
+-        assertTrue("restarted",server.isStarted());
+-        server.stop();
+-        assertTrue("restopped",!server.isStarted());
+-        server.destroy();
+     }
+ 
+     /* ------------------------------------------------------------ */

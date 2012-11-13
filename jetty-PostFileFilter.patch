@@ -1,0 +1,11 @@
+--- src/org/mortbay/servlet/PostFileFilter.java.sav	2006-08-10 14:03:26.000000000 +0200
++++ src/org/mortbay/servlet/PostFileFilter.java	2006-08-10 14:04:24.000000000 +0200
+@@ -30,7 +30,7 @@
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+ 
+-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
++//import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+ 
+ /* ------------------------------------------------------------ */
+ /** PostFileFilter.

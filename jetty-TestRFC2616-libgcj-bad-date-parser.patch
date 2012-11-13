@@ -1,0 +1,11 @@
+--- test/src/org/mortbay/http/TestRFC2616.java~	2006-04-05 17:24:44.000000000 -0700
++++ test/src/org/mortbay/http/TestRFC2616.java	2006-08-08 12:47:50.000000000 -0700
+@@ -296,7 +296,7 @@
+ 
+             fields.put("D1","Sun, 6 Nov 1994 08:49:37 GMT");
+             fields.put("D2","Sunday, 6-Nov-94 08:49:37 GMT");
+-            fields.put("D3","Sun Nov  6 08:49:37 1994");
++            fields.put("D3","Sun Nov 6 08:49:37 1994");
+             Date d1 = new Date(fields.getDateField("D1"));
+             Date d2 = new Date(fields.getDateField("D2"));
+             Date d3 = new Date(fields.getDateField("D3"));

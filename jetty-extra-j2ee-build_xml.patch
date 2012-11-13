@@ -1,0 +1,11 @@
+--- extra/j2ee/build.xml.sav	2006-06-20 19:17:28.000000000 +0200
++++ extra/j2ee/build.xml	2006-06-20 19:18:23.000000000 +0200
+@@ -66,7 +66,7 @@
+ 
+   <path id="xdoclet.classpath"> 
+     <path refid="j2ee.classpath"/>
+-    <fileset dir="${xdoclet.home}/lib">
++    <fileset dir="${xdoclet.home}">
+       <include name="**/*.jar"/>
+     </fileset>
+   </path>
