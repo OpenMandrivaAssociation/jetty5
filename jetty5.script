@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Wrapper script for Jetty5, to be sure it will allways
+# be run with correct user profile (jetty5 by default)
+#
+# derived from stuff in tomcat5.init
+#
+# Gomez Henri <hgomez@slib.fr>
+# Keith Irwin <keith_irwin@non.hp.com>
+# Nicolas Mailhot <nicolas.mailhot@one2team.com>
+#
+# version 1.01 - Fix webapps dir permissions
+#
+
+[ -r /etc/java/java.conf ] && . /etc/java/java.conf
+export JAVA_HOME
+
+# Path to the jetty launch script
+JETTY_SCRIPT=/usr/bin/djetty5
+
+# Jetty name :)
+JETTY_PROG=jetty5
+
+# if JETTY_USER is not set, use jetty5
+if [ -z "$JETTY_USER" ]; then
+    JETTY_USER="jetty5"
+fi
+
+# if JETTY_HOME is not set, use /usr/share/jetty5
+if [ -z "$JETTY_HOME" ]; then
+    JETTY_HOME="/usr/share/jetty5"
+fi
+
+pushd ${JETTY_HOME}/ext
+    rm -f jcert.jar
+    ln -s $(build-classpath jsse/jcert)
+    rm -f jnet.jar
+    ln -s $(build-classpath jsse/jnet)
+    rm -f jsse.jar
+    ln -s $(build-classpath jsse/jsse)
+popd
+
+
+
+RETVAL=0
+
+su - $JETTY_USER -c "$JETTY_SCRIPT $@"
+RETVAL=$?
+exit $RETVAL

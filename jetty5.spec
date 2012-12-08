@@ -54,7 +54,7 @@
 
 Name:           jetty5
 Version:        5.1.15
-Release:        %mkrel 1.5.5
+Release:        1.5.6
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
@@ -81,7 +81,7 @@ Patch2:         jetty-libgcj-bad-serialization.patch
 Patch3:         jetty-TestRFC2616-libgcj-bad-date-parser.patch
 Patch4:		jetty-webdefault.patch
 Patch5:		jetty-unix.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
+
 
 %if ! %{gcj_support}
 BuildArch:      noarch
@@ -95,6 +95,7 @@ BuildRequires:  jakarta-commons-collections
 BuildRequires:  junit
 BuildRequires:  xdoclet
 BuildRequires:  xjavadoc
+BuildRequires:  locales-en
 # main
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  jakarta-commons-el
@@ -257,10 +258,10 @@ mv demo/webapps/jsp-examples-dontdelete \
 rm src/org/mortbay/util/jmx/MX4JHttpAdaptor.java
 %endif
 
-%patch0 -b .sav
-%patch1 -b .sav
-%patch2 -b .sav
-%patch3 -b .sav
+%patch0 -p0 -b .sav
+%patch1 -p0 -b .sav
+%patch2 -p0 -b .sav
+%patch3 -p0 -b .sav
 %patch4
 %patch5
 
@@ -273,6 +274,7 @@ rm src/org/mortbay/http/SunJsseListener.java
 %{__sed} -i 's/\r//' demo/webapps/jetty/auth/logonError.html
 
 %build
+export LC_ALL=ISO-8859-1
 
 pushd ext
   ln -s $(build-classpath ant) .
@@ -339,42 +341,42 @@ cp %{SOURCE4} META-INF/MANIFEST.MF
 zip -u lib/org.mortbay.jetty.jar META-INF/MANIFEST.MF
 
 %install
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 # dirs
-install -dm 755 %{buildroot}%{_bindir}
-install -dm 755 %{buildroot}%{_initrddir}
-install -dm 755 %{buildroot}%{_javadir}/%{name}
-install -dm 755 %{buildroot}%{confdir}
-install -dm 755 %{buildroot}%{confdir}/extra
-install -dm 755 %{buildroot}%{demodir}
-install -dm 755 %{buildroot}%{homedir}
-install -dm 755 %{buildroot}%{homedir}/bin
-install -dm 755 %{buildroot}%{homedir}/ext
-install -dm 755 %{buildroot}%{homedir}/extra
-install -dm 755 %{buildroot}%{homedir}/extra/ext
-install -dm 755 %{buildroot}%{libdir}
-install -dm 755 %{buildroot}%{libdir}/extra
-install -dm 755 %{buildroot}%{logdir}
-install -dm 755 %{buildroot}%{rundir}
-install -dm 755 %{buildroot}%{tempdir}
-install -dm 755 %{buildroot}%{appdir}
+install -dm 755 $RPM_BUILD_ROOT%{_bindir}
+install -dm 755 $RPM_BUILD_ROOT%{_initrddir}
+install -dm 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
+install -dm 755 $RPM_BUILD_ROOT%{confdir}
+install -dm 755 $RPM_BUILD_ROOT%{confdir}/extra
+install -dm 755 $RPM_BUILD_ROOT%{demodir}
+install -dm 755 $RPM_BUILD_ROOT%{homedir}
+install -dm 755 $RPM_BUILD_ROOT%{homedir}/bin
+install -dm 755 $RPM_BUILD_ROOT%{homedir}/ext
+install -dm 755 $RPM_BUILD_ROOT%{homedir}/extra
+install -dm 755 $RPM_BUILD_ROOT%{homedir}/extra/ext
+install -dm 755 $RPM_BUILD_ROOT%{libdir}
+install -dm 755 $RPM_BUILD_ROOT%{libdir}/extra
+install -dm 755 $RPM_BUILD_ROOT%{logdir}
+install -dm 755 $RPM_BUILD_ROOT%{rundir}
+install -dm 755 $RPM_BUILD_ROOT%{tempdir}
+install -dm 755 $RPM_BUILD_ROOT%{appdir}
 # main pkg
-install -pm 755 extra/unix/bin/jetty.sh %{buildroot}%{_bindir}/d%{name}
-install -pm 755 %{SOURCE1} %{buildroot}%{_bindir}/%{name}
-install -pm 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
-install -pm 644 start.jar %{buildroot}%{homedir}/bin
-install -pm 644 stop.jar %{buildroot}%{homedir}/bin
-cp -pr etc/* %{buildroot}%{confdir}
-touch %{buildroot}%{confdir}/jetty.conf
-install -pm 644 lib/org.mortbay.jetty.jar %{buildroot}%{_javadir}/%{name}/%{name}-%{version}.jar
-install -pm 644 lib/org.mortbay.jmx.jar %{buildroot}%{_javadir}/%{name}/%{name}-jmx-%{version}.jar
-install -pm 644 lib/javax.servlet.jar %{buildroot}%{_javadir}/%{name}/%{name}-servlet-%{version}.jar
-(cd %{buildroot}%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
-pushd %{buildroot}%{libdir}
+install -pm 755 extra/unix/bin/jetty.sh $RPM_BUILD_ROOT%{_bindir}/d%{name}
+install -pm 755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/%{name}
+install -pm 755 %{SOURCE2} $RPM_BUILD_ROOT%{_initrddir}/%{name}
+install -pm 644 start.jar $RPM_BUILD_ROOT%{homedir}/bin
+install -pm 644 stop.jar $RPM_BUILD_ROOT%{homedir}/bin
+cp -pr etc/* $RPM_BUILD_ROOT%{confdir}
+touch $RPM_BUILD_ROOT%{confdir}/jetty.conf
+install -pm 644 lib/org.mortbay.jetty.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-%{version}.jar
+install -pm 644 lib/org.mortbay.jmx.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jmx-%{version}.jar
+install -pm 644 lib/javax.servlet.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-servlet-%{version}.jar
+(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
+pushd $RPM_BUILD_ROOT%{libdir}
   ln -sf %{_javadir}/%{name}/%{name}.jar org.mortbay.jetty.jar
   ln -sf %{_javadir}/%{name}/%{name}-jmx.jar org.mortbay.jmx.jar
 popd
-pushd %{buildroot}%{homedir}/ext
+pushd $RPM_BUILD_ROOT%{homedir}/ext
 ln -s $(build-classpath ant)
 ln -s $(build-classpath jasper5-compiler)
 ln -s $(build-classpath jasper5-runtime)
@@ -396,28 +398,28 @@ JETTY_PORT=8080
 JETTY_RUN=%{_localstatedir}/run/%{name}
 JETTY_PID=\$JETTY_RUN/jetty5.pid
 EO_RC
-) > %{buildroot}%{homedir}/.jettyrc
+) > $RPM_BUILD_ROOT%{homedir}/.jettyrc
 
 # extra
 %if %{with_extra}
-cp -pr extra/etc/* %{buildroot}%{confdir}/extra
-rm %{buildroot}%{confdir}/extra/LICENSE.apache.txt
-rm %{buildroot}%{confdir}/extra/LICENSE.hsqldb.html
-rm %{buildroot}%{confdir}/extra/LICENSE.p6spy.html
+cp -pr extra/etc/* $RPM_BUILD_ROOT%{confdir}/extra
+rm $RPM_BUILD_ROOT%{confdir}/extra/LICENSE.apache.txt
+rm $RPM_BUILD_ROOT%{confdir}/extra/LICENSE.hsqldb.html
+rm $RPM_BUILD_ROOT%{confdir}/extra/LICENSE.p6spy.html
 
-install -pm 644 extra/lib/org.jboss.jetty.jar %{buildroot}%{_javadir}/%{name}/%{name}-jboss-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.ftp.jar %{buildroot}%{_javadir}/%{name}/%{name}-ftp-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.j2ee.jar %{buildroot}%{_javadir}/%{name}/%{name}-j2ee-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.jaas.jar %{buildroot}%{_javadir}/%{name}/%{name}-jaas-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.jsr77.jar %{buildroot}%{_javadir}/%{name}/%{name}-jsr77-%{version}.jar
+install -pm 644 extra/lib/org.jboss.jetty.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jboss-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.ftp.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-ftp-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.j2ee.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-j2ee-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.jaas.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jaas-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.jsr77.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jsr77-%{version}.jar
 # omit for 1.6
-# install -pm 644 extra/lib/org.mortbay.jetty-jdk1.2.jar %{buildroot}%{_javadir}/%{name}/%{name}-jetty-jdk1.2-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.jetty.plus.jar %{buildroot}%{_javadir}/%{name}/%{name}-plus-%{version}.jar
+# install -pm 644 extra/lib/org.mortbay.jetty-jdk1.2.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jetty-jdk1.2-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.jetty.plus.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-plus-%{version}.jar
 # omit for 1.6
-# install -pm 644 extra/lib/org.mortbay.jmx-jdk1.2.jar %{buildroot}%{_javadir}/%{name}/%{name}-jmx-jdk1.2-%{version}.jar
-install -pm 644 extra/lib/org.mortbay.loadbalancer.jar %{buildroot}%{_javadir}/%{name}/%{name}-loadbalancer-%{version}.jar
-(cd %{buildroot}%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
-pushd %{buildroot}%{libdir}/extra
+# install -pm 644 extra/lib/org.mortbay.jmx-jdk1.2.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jmx-jdk1.2-%{version}.jar
+install -pm 644 extra/lib/org.mortbay.loadbalancer.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-loadbalancer-%{version}.jar
+(cd $RPM_BUILD_ROOT%{_javadir}/%{name} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
+pushd $RPM_BUILD_ROOT%{libdir}/extra
   ln -sf %{_javadir}/%{name}/%{name}-jboss.jar org.jboss.jetty.jar
   ln -sf %{_javadir}/%{name}/%{name}-ftp.jar org.mortbay.ftp.jar
   ln -sf %{_javadir}/%{name}/%{name}-j2ee.jar org.mortbay.j2ee.jar
@@ -426,7 +428,7 @@ pushd %{buildroot}%{libdir}/extra
   ln -sf %{_javadir}/%{name}/%{name}-plus.jar org.mortbay.jetty.plus.jar
   ln -sf %{_javadir}/%{name}/%{name}-loadbalancer.jar org.mortbay.loadbalancer.jar
 popd
-pushd %{buildroot}%{homedir}/extra/ext
+pushd $RPM_BUILD_ROOT%{homedir}/extra/ext
   #jonas_timer.jar
   #objectweb-datasource.jar
 ln -s $(build-classpath jaf)
@@ -445,24 +447,24 @@ popd
 %endif
 
 # demo
-cp -pr demo/* %{buildroot}%{demodir}
+cp -pr demo/* $RPM_BUILD_ROOT%{demodir}
 
 # javadoc
-cp -pr webapps/* %{buildroot}%{appdir}
-install -dm 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
-pushd %{buildroot}%{_javadocdir}/%{name}-%{version}
-unzip -q %{buildroot}%{appdir}/javadoc.war
+cp -pr webapps/* $RPM_BUILD_ROOT%{appdir}
+install -dm 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+pushd $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
+unzip -q $RPM_BUILD_ROOT%{appdir}/javadoc.war
 popd
-ln -s %{name}-%{version} %{buildroot}%{_javadocdir}/%{name}
+ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 # manual
-install -dm 755 %{buildroot}%{_docdir}/%{name}-%{version}
-cp -p {LICENSE.TXT,VERSION.TXT} %{buildroot}%{_docdir}/%{name}-%{version}
-mv %{buildroot}%{demodir}/webapps/jetty/* \
-                %{buildroot}%{_docdir}/%{name}-%{version}
-rm -rf %{buildroot}%{appdir}/jetty
+install -dm 755 $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+cp -p {LICENSE.TXT,VERSION.TXT} $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+mv $RPM_BUILD_ROOT%{demodir}/webapps/jetty/* \
+                $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+rm -rf $RPM_BUILD_ROOT%{appdir}/jetty
 
-pushd %{buildroot}%{homedir}
+pushd $RPM_BUILD_ROOT%{homedir}
    [ -d etc ]    || ln -fs %{confdir}   etc
    [ -d demo ]    || ln -fs %{demodir}   demo
    [ -d logs ]    || ln -fs %{logdir}    logs
@@ -478,7 +480,7 @@ pushd %{buildroot}%{homedir}
 popd
 
 # no need to fix paths
-#perl -pi -e 's#etc/#conf/#g;' %{buildroot}%{confdir}/*.xml
+#perl -pi -e 's#etc/#conf/#g;' $RPM_BUILD_ROOT%{confdir}/*.xml
 
 (cd %{buildroot} && ln -s %{_javadocdir}/%{name} ./%{homedir}/javadoc)
 
@@ -493,9 +495,6 @@ popd
     --exclude %{_localstatedir}/lib/jetty5/demo/webapps/jsp-examples.war
 %endif
 %endif
-
-%clean
-rm -rf %{buildroot}
 
 %pre
 # Add the "jetty5" user and group
@@ -561,8 +560,6 @@ fi
 %attr(755, jetty5, jetty5) %{tempdir}
 %attr(755, jetty5, jetty5) %{rundir}
 %dir %{appdir}
-%doc %{_docdir}/%{name}-%{version}/LICENSE.TXT
-%doc %{_docdir}/%{name}-%{version}/VERSION.TXT
 %attr(0755,root,root) %{_initrddir}/%{name}
 %if %{gcj_support}
 %dir %attr(-,root,root) %{_libdir}/gcj/%{name}
@@ -618,3 +615,148 @@ fi
 %attr(-,root,root) %{_libdir}/gcj/%{name}/%{name}-plus-%{version}.jar.*
 %endif
 %endif
+
+
+%changelog
+* Fri Dec 03 2010 Oden Eriksson <oeriksson@mandriva.com> 0:5.1.15-1.5.4mdv2011.0
++ Revision: 606080
+- rebuild
+
+* Wed Mar 17 2010 Oden Eriksson <oeriksson@mandriva.com> 0:5.1.15-1.5.3mdv2010.1
++ Revision: 523082
+- rebuilt for 2010.1
+
+* Thu Oct 29 2009 Oden Eriksson <oeriksson@mandriva.com> 0:5.1.15-1.5.2mdv2010.0
++ Revision: 460086
+- more fixes in the initscript
+
+* Thu Oct 29 2009 Anne Nicolas <ennael@mandriva.org> 0:5.1.15-1.5.1mdv2010.0
++ Revision: 459956
+- fix initscript (#53952)
+
+* Tue Oct 27 2009 Oden Eriksson <oeriksson@mandriva.com> 0:5.1.15-1.5.0mdv2010.0
++ Revision: 459587
+- sync with fc11
+
+* Tue Oct 27 2009 Anne Nicolas <ennael@mandriva.org> 0:5.1.14-1.5.4mdv2010.0
++ Revision: 459570
+- fix build
+- fix functions not sourced
+  fix LSB compliance for init script (#53952)
+
+  + Christophe Fergeau <cfergeau@mandriva.com>
+    - rebuild
+
+  + Antoine Ginies <aginies@mandriva.com>
+    - rebuild
+
+* Thu Jul 31 2008 Alexander Kurtakov <akurtakov@mandriva.org> 0:5.1.14-1.5.1mdv2009.0
++ Revision: 257688
+- update OSGi manifest
+
+* Mon Jul 07 2008 Alexander Kurtakov <akurtakov@mandriva.org> 0:5.1.14-1.2.1mdv2009.0
++ Revision: 232322
+- new version 5.1.14 \ sync with fedora
+
+* Tue Mar 04 2008 Alexander Kurtakov <akurtakov@mandriva.org> 0:5.1.12-1.0.7mdv2008.1
++ Revision: 179023
+- add zip BR
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - rebuild
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+  + Anssi Hannula <anssi@mandriva.org>
+    - buildrequire java-rpmbuild, i.e. build with icedtea on x86(_64)
+
+* Sat Sep 15 2007 Anssi Hannula <anssi@mandriva.org> 0:5.1.12-1.0.5mdv2008.0
++ Revision: 87432
+- rebuild to filter out autorequires of GCJ AOT objects
+- remove unnecessary Requires(post) on java-gcj-compat
+
+* Thu Aug 23 2007 Thierry Vignaud <tv@mandriva.org> 0:5.1.12-1.0.4mdv2008.0
++ Revision: 70277
+- kill file require on chkconfig
+
+* Sat Aug 04 2007 David Walluck <walluck@mandriva.org> 0:5.1.12-1.0.3mdv2008.0
++ Revision: 58979
+- add eclipse manifest
+
+* Fri Jul 27 2007 David Walluck <walluck@mandriva.org> 0:5.1.12-1.0.1mdv2008.0
++ Revision: 56273
+- fix jsp BuildRequires
+- BuildRequires: tomcat5-jsp
+- Import jetty5
+
+
+
+* Fri Feb 02 2007 Ralph Apel <r.apel at r-apel.de> - 0:5.1.12-1jpp
+- Upgrade to 5.1.12
+- Add gcj_support option
+- Avoid circular dependency with mx4j-tools thru bootstrap option
+
+* Thu Aug 10 2006 Ralph Apel <r.apel@r-apel.de> - 0:5.1.11-0.rc0.2jpp
+- Fix version/release in changelog
+- Introduce option '--without extra' to omit this subpackage and its (B)Rs
+- Don't delete user on erase
+- Tidy up BRs
+- Add commons-el.jar to ext
+- No ghost for lib/org.mortbay.jetty.jar, lib/org.mortbay.jmx.jar
+- Avoid use of build-jar-repository in spec
+- Avoid use of rebuild-jar-repository in init and start script
+- Don't handle JETTY_PID file in init script: start script takes care
+- Patch PostFileFilter to remove a (unused) com.sun package import
+- Explicitly (B)R  geronimo-jta-1.0.1B-api instead of any jta
+- Add empty file /etc/jetty5/jetty.conf: 
+  activate contexts manually if desired
+
+* Tue Jun 20 2006 Ralph Apel <r.apel@r-apel.de> - 0:5.1.2-3jpp
+- First JPP-1.7 release
+
+* Mon Mar 14 2005 Ralph Apel <r.apel@r-apel.de> - 0:5.1.2-2jpp
+- link commons-logging to %%{_homedir}/ext
+- link jspapi to %%{_homedir}/ext
+- only use %%{_homedir}/etc not conf
+
+* Tue Feb 01 2005 Ralph Apel <r.apel@r-apel.de> - 0:5.1.2-1jpp
+- Upgrade to 5.1.2
+- Prepare for build with Java 1.5, (thx to Petr Adamek)
+- Require /sbin/chkconfig instead of chkconfig package
+
+* Tue Jan 04 2005 Ralph Apel <r.apel@r-apel.de> - 0:5.0.0-2jpp
+- Include build of extra, so called JettyPlus
+- Create own subdirectory for jetty5 in %%{_javadir}
+- Change %%{_homedir}/conf to %%{_homedir}/etc
+- Dropped chkconfig requirement; just exec if /sbin/chkconfig available
+- Fixed unpackaged .jettyrc
+
+* Mon Oct 04 2004 Ralph Apel <r.apel@r-apel.de> - 0:5.0.0-1jpp
+- Upgrade to 5.0.0
+- Fixed URL
+- relaxed some versioned dependencies
+
+* Sun Aug 23 2004 Randy Watler <rwatler at finali.com> - 0:4.2.20-2jpp
+- Rebuild with ant-1.6.2
+
+* Fri Jun 18 2004 Ralph Apel <r.apel@r-apel.de> - 0:4.2.20-1jpp
+- Upgrade to 4.2.20
+- Drop ownership of /usr/share/java and /usr/bin
+
+* Tue Feb 24 2004 Ralph Apel <r.apel@r-apel.de> - 0:4.2.17-2jpp
+- enhancements and corrections thanks to Kaj J. Niemi:
+- $JETTY_HOME/ext didn't exist but %%post depended on it
+- correctly shutdown jetty upon uninstall
+- RedHat depends on chkconfig/service to work so a functional
+  init.d/jetty4 needed to be created
+- djetty4 (jetty.sh) did funny things especially when it attempted to guess
+  stuff
+- a lot of .xml config files assumed that the configs were in etc/ instead of
+  conf/
+
+* Thu Feb 19 2004 Ralph Apel <r.apel@r-apel.de> - 0:4.2.17-1jpp
+- First JPackage release.
