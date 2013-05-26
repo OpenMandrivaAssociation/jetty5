@@ -54,7 +54,7 @@
 
 Name:           jetty5
 Version:        5.1.15
-Release:        1.5.6
+Release:        1.5.7
 Epoch:          0
 Summary:        The Jetty Webserver and Servlet Container
 
