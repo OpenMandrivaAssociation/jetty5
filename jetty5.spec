@@ -60,7 +60,7 @@ Summary:        The Jetty Webserver and Servlet Container
 
 Group:          Development/Java
 License:        Apache License
-URL:            http://jetty.mortbay.org/jetty/
+URL:            https://jetty.mortbay.org/jetty/
 # Following source tarball was originally taken from the following location:
 # http://www.ibiblio.org/maven/jetty/jetty-5.1.x/jetty-5.1.14.tgz
 # The tarball was modified by removing all jars and BCLA licenses.
